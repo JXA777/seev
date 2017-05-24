@@ -6,24 +6,90 @@ var TWO = .4;
 var THREE = .6;
 var FOUR = .8;
 
-var sensor['P9_35', 'P9_36', 'P9_37', 'P9_38', 'P9_39', 'P9_40'];
-var motor[
+/*
+The sensor array holds the names of the pins used for analog reads.
+The motor array holds objects corresponding to each GPIO for motor control.
+Each sensor in its position corresponds to motor it its position. 
+*/
+var sensor = ['P9_35', 'P9_36', 'P9_37', 'P9_38', 'P9_39', 'P9_40'];
+var motor = [
 		  {name:'P8_8', rate:0, state:0}, 
 		  {name:'P8_10', rate:0, state:0}, 
 		  {name:'P8_12', rate:0, state:0}, 
 		  {name:'P8_14', rate:0, state:0}, 
-		  {name:'P8_16', rate:0, state:0}
+		  {name:'P8_16', rate:0, state:0},
+		  {name:'P8_18', rate:0, state:0}
 		 ];
+
+//Self invoking function that will do the initializations.
+(function(){
+	//Set all motor GPIOs to output. 
+	for (var i = 0; i < motor.length; i++)
+	{
+		bone.pinMode(motor[i].name, bone.OUTPUT);
+	}
+
+}())
+
+/*
+This function will register an analog read callback for each sensor.
+The callback updates the sensor's corresponding motor's rates.
+*/
 
 function checkSensors()
 {
-	for (var i = 0; i < sensor.length; i++)
-	{
-		bone.analogRead(sensor[i], function(){
-			distance(x, i);});
-	}
+	bone.analogRead(sensor[0], function(x){
+		x.value > FOUR ? motor[0].rate = FOUR
+		: x.value > THREE ? motor[0].rate = THREE
+		: x.value > TWO ? motor[0].rate = TWO
+		: x.value > ONE ? motor[0].rate = ONE
+		: motor[0] = ZERO
+	});
+
+	bone.analogRead(sensor[1], function(x){
+		x.value > FOUR ? motor[1].rate = FOUR
+		: x.value > THREE ? motor[1].rate = THREE
+		: x.value > TWO ? motor[1].rate = TWO
+		: x.value > ONE ? motor[1].rate = ONE
+		: motor[1] = ZERO
+	});
+
+	bone.analogRead(sensor[2], function(x){
+		x.value > FOUR ? motor[2].rate = FOUR
+		: x.value > THREE ? motor[2].rate = THREE
+		: x.value > TWO ? motor[2].rate = TWO
+		: x.value > ONE ? motor[2].rate = ONE
+		: motor[2] = ZERO
+	});
+
+	bone.analogRead(sensor[3], function(x){
+		x.value > FOUR ? motor[3].rate = FOUR
+		: x.value > THREE ? motor[3].rate = THREE
+		: x.value > TWO ? motor[3].rate = TWO
+		: x.value > ONE ? motor[3].rate = ONE
+		: motor[3] = ZERO
+	});
+
+	bone.analogRead(sensor[4], function(x){
+		x.value > FOUR ? motor[4].rate = FOUR
+		: x.value > THREE ? motor[4].rate = THREE
+		: x.value > TWO ? motor[4].rate = TWO
+		: x.value > ONE ? motor[4].rate = ONE
+		: motor[4] = ZERO
+	});
+
+	bone.analogRead(sensor[5], function(x){
+		x.value > FOUR ? motor[5].rate = FOUR
+		: x.value > THREE ? motor[5].rate = THREE
+		: x.value > TWO ? motor[5].rate = TWO
+		: x.value > ONE ? motor[5].rate = ONE
+		: motor[5] = ZERO
+	});
+
+
 }
 
+//Toggle motors set at rate FOUR every 1000 ms.
 setInterval(function(){
 	for (var i = 0; i < motor.length; i++)
 	{
@@ -40,6 +106,7 @@ setInterval(function(){
 	}
 }, 1000);
 
+//Toggle motors set at rate THREE every 500 ms.
 setInterval(function(){
 	for (var i = 0; i < motor.length; i++)
 	{
@@ -56,6 +123,7 @@ setInterval(function(){
 	}
 }, 500);
 
+//Toggle motors set at rate TWO every 250 ms.
 setInterval(function(){
 	for (var i = 0; i < motor.length; i++)
 	{
@@ -72,6 +140,7 @@ setInterval(function(){
 	}
 }, 250);
 
+//Toggle motors set at rate ONE every 125 ms.
 setInterval(function(){
 	for (var i = 0; i < motor.length; i++)
 	{
@@ -88,31 +157,9 @@ setInterval(function(){
 	}
 }, 125);
 
+//Check the sensors for new values every 200 ms.
 setInterval(checkSensors, 200);
 
-function distance(x, sensorNumber)
-{
-	if (x.value > FOUR)
-	{
-		motor[sensorNumber].rate = FOUR;
-	}
-	else if (x.value > THREE)
-	{
-		motor[sensorNumber].rate = THREE;
-	}
-	else if (x.value > TWO)
-	{
-		motor[sensorNumber].rate = TWO;
-	}
-	else if (x.value > ONE)
-	{
-		motor[sensorNumber].rate = ONE;
-	}
-	else
-	{
-		motor[sensorNumber].rate = ZERO;
-	}
 
-}
 
 
